@@ -25,3 +25,21 @@ const defaultTheme: Theme = {
     lg: '24px',
   }
 };
+
+
+// 3. Create the Context object
+const ThemeContext = createContext<Theme>(defaultTheme);
+
+// 4. Create the Provider component
+export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+  // In a more advanced version, you could add state here to toggle "Dark Mode"
+  return (
+    <ThemeContext.Provider value={defaultTheme}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+// 5. Create a custom hook for easy access
+export const useTheme = () => useContext(ThemeContext);
+
