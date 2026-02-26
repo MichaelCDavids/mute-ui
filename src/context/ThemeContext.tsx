@@ -31,10 +31,25 @@ const defaultTheme: Theme = {
 const ThemeContext = createContext<Theme>(defaultTheme);
 
 // 4. Create the Provider component
-export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  // In a more advanced version, you could add state here to toggle "Dark Mode"
+// src/context/ThemeContext.tsx
+
+// A "DeepPartial" type helps if the theme has nested objects
+interface ThemeProviderProps {
+  children: React.ReactNode;
+  customTheme?: Partial<Theme>; 
+}
+
+export const ThemeProvider = ({ children, customTheme }: ThemeProviderProps) => {
+  // We merge the defaults with the custom overrides
+  const theme = {
+    ...defaultTheme,
+    ...customTheme,
+    colors: { ...defaultTheme.colors, ...customTheme?.colors },
+    spacing: { ...defaultTheme.spacing, ...customTheme?.spacing },
+  };
+
   return (
-    <ThemeContext.Provider value={defaultTheme}>
+    <ThemeContext.Provider value={theme}>
       {children}
     </ThemeContext.Provider>
   );
