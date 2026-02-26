@@ -1,29 +1,14 @@
 // src/layout/Stack.tsx
-import React from 'react';
+import { useTheme } from '../context/ThemeContext';
 
-// We'll define our spacing options based on a 4px or 8px scale
-export type Spacing = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-
-interface StackProps {
-  children: React.ReactNode;
-  direction?: 'column' | 'row';
-  gap?: Spacing;
-  align?: 'start' | 'center' | 'end' | 'stretch';
-}
-
-export const Stack = ({ 
-  children, 
-  direction = 'column', 
-  gap = 'md', 
-  align = 'stretch' 
-}: StackProps) => {
-  // We will map our 'gap' strings to actual pixel values later
+export const Stack = ({ children, direction = 'column', gap = 'md' }) => {
+  const { spacing } = useTheme();
+  
   return (
     <div style={{ 
       display: 'flex', 
-      flexDirection: direction, 
-      alignItems: align,
-      // The 'gap' property is perfect for this!
+      flexDirection: direction,
+      gap: spacing[gap] // Pulls the pixel value (e.g., '16px')
     }}>
       {children}
     </div>
