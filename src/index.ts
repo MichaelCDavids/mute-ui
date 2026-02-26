@@ -1,9 +1,14 @@
 // src/index.ts
+import { Box } from './atoms/Box';
+import { Stack } from './layout/Stack';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 
-// Export the Theme System
-export * from './context/ThemeContext';
+// 1. Named Exports
+export { Box, Stack, ThemeProvider, useTheme };
 
-// Export Layout Components
-export * from './layout/Stack';
-
-// We will add more exports here as we build Atoms and Molecules!
+// 2. Namespace Export (The "Muted" Object)
+export const Muted = {
+  Box,
+  Stack,
+  ThemeProvider,
+};
