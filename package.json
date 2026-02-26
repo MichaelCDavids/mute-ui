@@ -1,0 +1,12 @@
+{
+  "name": "@MichaelCDavids/muted-ui",
+  "version": "1.0.0",
+  "description": "A muted, context-aware React component library",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ]
+}
