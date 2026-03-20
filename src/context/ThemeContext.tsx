@@ -21,6 +21,9 @@ export interface Theme {
       dusk: string;
       sand: string;
       sky: string;
+      mist: string;
+      stone: string;
+      meadow: string;
     };
      button: {
       text: string;
@@ -58,6 +61,9 @@ const defaultTheme: Theme = {
       dusk: 'radial-gradient(circle, #d1b1e1, #a383c1)',
       sand: 'radial-gradient(circle, #e1d4b1, #c1a883)',
       sky: 'radial-gradient(circle, #b1d4e1, #83a8c1)',
+      mist: 'radial-gradient(circle, #d7e0e4, #b0c0c8)',
+      stone: 'radial-gradient(circle, #c8c8c8, #a8a8a8)',
+      meadow: 'radial-gradient(circle, #c4e1b1, #a3c183)',
     },
     button: {
       text: '#FFFFFF',
@@ -80,15 +86,12 @@ const defaultTheme: Theme = {
       @keyframes pulse {
         0% {
           transform: scale(1);
-          box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
         }
-        70% {
+        50% {
           transform: scale(1.05);
-          box-shadow: 0 0 10px 20px rgba(0, 0, 0, 0);
         }
         100% {
           transform: scale(1);
-          box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
         }
       }
     `,
