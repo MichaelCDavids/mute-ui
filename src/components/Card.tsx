@@ -1,5 +1,4 @@
-
-import React, { ElementType } from 'react';
+import { ElementType } from 'react';
 import { Box } from '../atoms/Box';
 import { PolymorphicProps } from '../types';
 import { Stack } from '../layout/Stack';
