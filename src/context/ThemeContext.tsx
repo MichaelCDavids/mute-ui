@@ -1,12 +1,7 @@
 
 import React, { createContext, useContext, useMemo } from 'react';
 
-// Define a deep partial utility type
-type DeepPartial<T> = {
-  [P in keyof T]?: DeepPartial<T[P]>;
-};
-
-// 1. Define the shape of our theme
+// 1. Define the shape of the theme
 export interface Theme {
   colors: {
     primary: string;
@@ -27,17 +22,11 @@ export interface Theme {
       rose: string;
       peach: string;
       ice: string;
-      lagoon: string;
-      heather: string;
-      moss: string;
-      lilac: string;
-      apricot: string;
-      seafoam: string;
+      lavender: string;
+      mint: string;
+      butter: string;
       coral: string;
-    };
-     button: {
-      text: string;
-      hover: string;
+      ocean: string;
     };
   };
   spacing: {
@@ -45,17 +34,9 @@ export interface Theme {
     sm: string;
     md: string;
     lg: string;
+    xl: string;
   };
-  shadows: {
-    0: string;
-    1: string;
-    2: string;
-  };
-  animations: {
-    pulse: string;
-    shake: string;
-    jiggle: string;
-  };
+  // ... add other theme properties like typography, breakpoints, etc.
 }
 
 // 2. Create the default "Muted" values
@@ -79,17 +60,11 @@ const defaultTheme: Theme = {
       rose: 'radial-gradient(circle, #e1b1b1, #c18383)',
       peach: 'radial-gradient(circle, #e1c4b1, #c1a383)',
       ice: 'radial-gradient(circle, #b1e1e1, #83c1c1)',
-      lagoon: 'radial-gradient(circle, #b1e1d4, #83c1a8)',
-      heather: 'radial-gradient(circle, #d1b1e1, #a383c1)',
-      moss: 'radial-gradient(circle, #b1e1b1, #83c183)',
-      lilac: 'radial-gradient(circle, #e1b1e1, #c183c1)',
-      apricot: 'radial-gradient(circle, #e1d4b1, #c1a883)',
-      seafoam: 'radial-gradient(circle, #b1e1c4, #83c1a3)',
-      coral: 'radial-gradient(circle, #e1b1b1, #c18383)',
-    },
-    button: {
-      text: '#FFFFFF',
-      hover: '#333333',
+      lavender: 'radial-gradient(circle, #e1d1e1, #c1a3c1)',
+      mint: 'radial-gradient(circle, #d1e1d1, #a3c1a3)',
+      butter: 'radial-gradient(circle, #e1e1d1, #c1c1a3)',
+      coral: 'radial-gradient(circle, #e1b1a0, #c1836f)',
+      ocean: 'radial-gradient(circle, #a0b1e1, #6f83c1)',
     },
   },
   spacing: {
@@ -97,105 +72,44 @@ const defaultTheme: Theme = {
     sm: '8px',
     md: '16px',
     lg: '24px',
-  },
-  shadows: {
-    0: 'none',
-    1: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
-    2: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
-  },
-  animations: {
-    pulse: `
-      @keyframes pulse {
-        0% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.05);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
-    `,
-    shake: `
-      @keyframes shake {
-        0%, 100% {
-          transform: translateX(0);
-        }
-        10%, 30%, 50%, 70%, 90% {
-          transform: translateX(-5px);
-        }
-        20%, 40%, 60%, 80% {
-          transform: translateX(5px);
-        }
-      }
-    `,
-    jiggle: `
-      @keyframes jiggle {
-        0%, 100% {
-          transform: rotate(-1deg);
-        }
-        50% {
-          transform: rotate(1deg);
-        }
-      }
-    `,
+    xl: '32px',
   },
 };
 
-// 3. Create the Context objects
-const ThemeContext = createContext<Theme>(defaultTheme);
-export const BoxLevelContext = createContext(0); // For nested Box styles
 
-// 4. Create the Provider component
+// 3. Create the ThemeContext
+const ThemeContext = createContext<Theme>(defaultTheme);
+
+// 4. Create a ThemeProvider component
 interface ThemeProviderProps {
   children: React.ReactNode;
-  customTheme?: DeepPartial<Theme>;
+  customTheme?: Partial<Theme>;
 }
 
-// Helper for deep merging themes
-const deepMerge = (target: { [key: string]: any }, source: { [key:string]: any }) => {
-  const output = { ...target };
-  if (isObject(target) && isObject(source)) {
-    Object.keys(source).forEach(key => {
-      if (isObject(source[key])) {
-        if (!(key in target))
-          Object.assign(output, { [key]: source[key] });
-        else
-          output[key] = deepMerge(target[key], source[key]);
-      } else {
-        Object.assign(output, { [key]: source[key] });
-      }
-    });
-  }
-  return output;
-};
-
-const isObject = (item: any): item is object => {
-  return (item && typeof item === 'object' && !Array.isArray(item));
-};
-
-
-export const ThemeProvider = React.memo(({ children, customTheme }: ThemeProviderProps) => {
-  // Memoize the theme value to prevent unnecessary re-renders
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, customTheme }) => {
   const theme = useMemo(() => {
-    if (customTheme) {
-      return deepMerge(defaultTheme, customTheme) as Theme;
-    }
-    return defaultTheme;
-  }, [customTheme]);
+    if (!customTheme) return defaultTheme;
+    return {
+        ...defaultTheme,
+        ...customTheme,
+        colors: {
+            ...defaultTheme.colors,
+            ...customTheme.colors,
+            gradients: {
+                ...defaultTheme.colors.gradients,
+                ...customTheme.colors?.gradients,
+            },
+        },
+        spacing: {
+            ...defaultTheme.spacing,
+            ...customTheme.spacing,
+        },
+    };
+}, [customTheme]);
 
-  return (
-    <ThemeContext.Provider value={theme}>
-      <style>
-        {theme.animations.pulse}
-        {theme.animations.shake}
-        {theme.animations.jiggle}
-      </style>
-      {children}
-    </ThemeContext.Provider>
-  );
-});
 
-// 5. Create a custom hook for easy access
+  return <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>;
+};
+
+// 5. Create a hook to access the theme
 export const useTheme = () => useContext(ThemeContext);
