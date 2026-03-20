@@ -68,6 +68,7 @@ const AnimatedButton = ({ gradient, animation, children }) => {
         backgroundImage: theme.colors.gradients[gradient],
         animation: isAnimating ? `${animation} 0.5s ease-in-out` : 'none',
         color: theme.colors.button.text,
+        flexGrow: 0, // Prevent buttons from growing
         flexShrink: 0, // Prevent buttons from shrinking
       }}
     >
@@ -203,6 +204,11 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
   `;
 
+  const buttonStyle = {
+    flexGrow: 0,
+    flexShrink: 0,
+  };
+
   return (
     <ThemeProvider customTheme={currentTheme}>
       <div style={{ padding: '20px', backgroundColor: '#eee', minHeight: '100vh' }}>
@@ -221,12 +227,12 @@ root.render(<App />);
 
              {/* Theme-switching buttons */}
             <Stack direction="row" gap="md" style={{ marginTop: '20px', flexWrap: 'wrap' }}>
-                <Box as="button" onClick={() => setCurrentTheme(themes.default)}>Default</Box>
-                <Box as="button" onClick={() => setCurrentTheme(themes.sunset)}>Sunset</Box>
-                <Box as="button" onClick={() => setCurrentTheme(themes.ocean)}>Ocean</Box>
-                <Box as="button" onClick={() => setCurrentTheme(themes.forest)}>Forest</Box>
-                <Box as="button" onClick={() => setCurrentTheme(themes.lavender)}>Lavender</Box>
-                <Box as="button" onClick={() => setCurrentTheme(themes.mint)}>Mint</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.default)}>Default</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.sunset)}>Sunset</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.ocean)}>Ocean</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.forest)}>Forest</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.lavender)}>Lavender</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.mint)}>Mint</Box>
             </Stack>
           </Box>
 
