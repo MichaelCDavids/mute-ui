@@ -1,1 +1,6 @@
-{"projects":{"default":"mute-ui"}}
+
+{
+  "projects": {
+    "default": "dev-project"
+  }
+}
