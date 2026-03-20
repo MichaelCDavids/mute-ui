@@ -68,6 +68,7 @@ const AnimatedButton = ({ gradient, animation, children }) => {
         backgroundImage: theme.colors.gradients[gradient],
         animation: isAnimating ? `${animation} 0.5s ease-in-out` : 'none',
         color: theme.colors.button.text,
+        flexShrink: 0, // Prevent buttons from shrinking
       }}
     >
       {children}
@@ -85,9 +86,7 @@ const GradientButtons = () => {
   return (
     <Box>
       <h2>Gradient Buttons</h2>
-      <p>
-        An expanded palette of 20 muted gradients.
-      </p>
+      <p>An expanded palette of 20 muted gradients.</p>
       <Stack direction="row" gap="md" style={{ marginTop: '20px', flexWrap: 'wrap' }}>
         {gradients.map(gradient => (
           <AnimatedButton key={gradient} gradient={gradient} animation="pulse">
@@ -102,9 +101,7 @@ const GradientButtons = () => {
 const AnimationButtons = () => (
     <Box>
         <h2>Animated Buttons</h2>
-        <p>
-            Subtle animations to provide user feedback.
-        </p>
+        <p>Subtle animations to provide user feedback.</p>
         <Stack direction="row" gap="md" style={{ marginTop: '20px', flexWrap: 'wrap' }}>
             <AnimatedButton gradient="primary" animation="pulse">Pulse</AnimatedButton>
             <AnimatedButton gradient="secondary" animation="shake">Shake</AnimatedButton>
@@ -123,7 +120,7 @@ const CodeSnippet = ({ code }) => {
     };
 
     return (
-        <div style={{ position: 'relative', backgroundColor: '#f5f5f5', borderRadius: '4px', padding: '16px', marginTop: '16px' }}>
+        <div style={{ position: 'relative', backgroundColor: '#f5f5f5', borderRadius: '4px', padding: '16px', marginTop: '16px', overflowX: 'auto' }}>
             <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
                 <code>{code}</code>
             </pre>
@@ -208,7 +205,7 @@ root.render(<App />);
 
   return (
     <ThemeProvider customTheme={currentTheme}>
-      <div style={{ padding: '40px', backgroundColor: '#eee', minHeight: '100vh' }}>
+      <div style={{ padding: '20px', backgroundColor: '#eee', minHeight: '100vh' }}>
         <Stack gap="lg">
           {/* Header */}
           <Box>
@@ -253,12 +250,16 @@ root.render(<App />);
             <p>
                 Mute-UI is perfect for a variety of applications where a clean and consistent design is a priority. Here are a few ideas:
             </p>
-            <ul>
-                <li><b>Personal dashboards:</b> Create a personalized dashboard to track your habits, goals, or finances.</li>
-                <li><b>Admin panels:</b> Build intuitive and easy-to-use admin interfaces for your applications.</li>
-                <li><b>Blogs and portfolios:</b> Showcase your work with a clean and minimalist design.</li>
-                <li><b>Prototyping:</b> Quickly prototype ideas and layouts without getting bogged down in design details.</li>
-            </ul>
+            <Box style={{ maxHeight: '150px', overflowY: 'auto', paddingRight: '10px', border: '1px solid #ddd', borderRadius: '4px' }}>
+              <ul style={{ marginTop: 0, paddingLeft: '20px' }}>
+                  <li><b>Personal dashboards:</b> Create a personalized dashboard to track your habits, goals, or finances.</li>
+                  <li><b>Admin panels:</b> Build intuitive and easy-to-use admin interfaces for your applications.</li>
+                  <li><b>Blogs and portfolios:</b> Showcase your work with a clean and minimalist design.</li>
+                  <li><b>Prototyping:</b> Quickly prototype ideas and layouts without getting bogged down in design details.</li>
+                  <li><b>Internal tools:</b> Develop straightforward internal tools for your team.</li>
+                  <li><b>Documentation sites:</b> Present your documentation in a clear, readable format.</li>
+              </ul>
+            </Box>
         </Box>
         <Box>
             <h2>Getting Started</h2>
