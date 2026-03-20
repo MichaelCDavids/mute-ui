@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useMemo } from 'react';
 
 // 1. Define the shape of the theme
@@ -8,6 +7,7 @@ export interface Theme {
     surface: string;
     inset: string;
     text: string;
+    accent: string;
     gradients: {
       primary: string;
       secondary: string;
@@ -36,6 +36,11 @@ export interface Theme {
     lg: string;
     xl: string;
   };
+  shadows: {
+    0: string;
+    1: string;
+    2: string;
+  };
   // ... add other theme properties like typography, breakpoints, etc.
 }
 
@@ -46,6 +51,7 @@ const defaultTheme: Theme = {
     surface: '#FFFFFF',
     inset: '#F5F5F5',
     text: '#212529',
+    accent: '#E0E0E0',
     gradients: {
       primary: 'radial-gradient(circle, #D4D4D4, #BDBDBD)',
       secondary: 'radial-gradient(circle, #EAEAEA, #CFCFCF)',
@@ -73,6 +79,11 @@ const defaultTheme: Theme = {
     md: '16px',
     lg: '24px',
     xl: '32px',
+  },
+  shadows: {
+    0: 'none',
+    1: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
+    2: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
   },
 };
 
@@ -104,6 +115,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, customTh
             ...defaultTheme.spacing,
             ...customTheme.spacing,
         },
+        shadows: {
+            ...defaultTheme.shadows,
+            ...customTheme.shadows,
+        },
     };
 }, [customTheme]);
 
@@ -113,3 +128,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, customTh
 
 // 5. Create a hook to access the theme
 export const useTheme = () => useContext(ThemeContext);
+
+// 6. Create a context for the Box component's level
+export const BoxLevelContext = createContext(0);
