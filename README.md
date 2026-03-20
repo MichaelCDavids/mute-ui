@@ -1,4 +1,4 @@
-# Mute-UI: A "Muted" React Component Library
+      # Mute-UI: A "Muted" React Component Library
 
 **A small, opinionated set of React components for building clean, consistent, and visually "muted" user interfaces with minimal effort.**
 
