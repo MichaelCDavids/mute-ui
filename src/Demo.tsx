@@ -1,1 +1,506 @@
-// src/Demo.tsx\nimport React, { useState } from \'react\';\nimport { ThemeProvider, Theme, useTheme } from \'./context/ThemeContext\';\nimport { Box } from \'./atoms/Box\';\nimport { Stack } from \'./layout/Stack\';\n\n// Define some color presets\nconst themes: Record<string, Partial<Theme>> = {\n  default: {},\n  sunset: {\n    colors: {\n      primary: \'#A24C2A\',\n      surface: \'#F2E9E4\',\n      inset: \'#E0D8D3\',\n      text: \'#4A4A4A\',\n    },\n  },\n  ocean: {\n    colors: {\n      primary: \'#0D47A1\',\n      surface: \'#E3F2FD\',\n      inset: \'#BBDEFB\',\n      text: \'#000000\',\n    },\n  },\n  forest: {\n    colors: {\n      primary: \'#2E7D32\',\n      surface: \'#E8F5E9\',\n      inset: \'#C8E6C9\',\n      text: \'#1B5E20\',\n    },\n  },\n  lavender: {\n    colors: {\n      primary: \'#673AB7\',\n      surface: \'#EDE7F6\',\n      inset: \'#D1C4E9\',\n      text: \'#311B92\',\n    },\n  },\n  mint: {\n    colors: {\n      primary: \'#009688\',\n      surface: \'#E0F2F1\',\n      inset: \'#B2DFDB\',\n      text: \'#004D40\',\n    },\n  },\n};\n\nconst AnimatedButton = ({ gradient, animation, children }) => {\n  const theme = useTheme();\n  const [isAnimating, setIsAnimating] = useState(false);\n\n  const handleClick = () => {\n    setIsAnimating(true);\n    setTimeout(() => {\n      setIsAnimating(false);\n    }, 500); // Animation duration\n  };\n\n  return (\n    <Box\n      as=\"button\"\n      onClick={handleClick}\n      style={{\n        backgroundImage: theme.colors.gradients[gradient],\n        animation: isAnimating ? `${animation} 0.5s ease-in-out` : \'none\',\n        color: theme.colors.text,\n        flexGrow: 0, // Prevent buttons from growing\n        flexShrink: 0, // Prevent buttons from shrinking\n      }}\n    >\n      {children}\n    </Box>\n  );\n};\n\nconst GradientButtons = () => {\n  const gradients = [\n    \'aurora\', \'dusk\', \'sand\', \'sky\', \'mist\', \'stone\', \'meadow\',\n    \'rose\', \'peach\', \'ice\', \'lavender\', \'mint\', \'butter\', \'coral\',\n    \'ocean\'\n  ];\n\n  return (\n    <Box>\n      <h2>Gradient Buttons</h2>\n      <p>An expanded palette of 20 muted gradients.</p>\n      <Stack direction=\"row\" gap=\"md\" style={{ marginTop: \'20px\', flexWrap: \'wrap\' }}>\n        {gradients.map(gradient => (\n          <AnimatedButton key={gradient} gradient={gradient} animation=\"pulse\">\n            {gradient.charAt(0).toUpperCase() + gradient.slice(1)}\n          </AnimatedButton>\n        ))}\n      </Stack>\n    </Box>\n  );\n};\n\nconst AnimationButtons = () => (\n    <Box>\n        <h2>Animated Buttons</h2>\n        <p>Subtle animations to provide user feedback.</p>\n        <Stack direction=\"row\" gap=\"md\" style={{ marginTop: \'20px\', flexWrap: \'wrap\' }}>\n            <AnimatedButton gradient=\"primary\" animation=\"pulse\">Pulse</AnimatedButton>\n            <AnimatedButton gradient=\"secondary\" animation=\"shake\">Shake</AnimatedButton>\n            <AnimatedButton gradient=\"tertiary\" animation=\"jiggle\">Jiggle</AnimatedButton>\n        </Stack>\n    </Box>\n);\n\nconst CodeSnippet = ({ code }) => {\n    const [copied, setCopied] = useState(false);\n\n    const handleCopy = () => {\n        navigator.clipboard.writeText(code);\n        setCopied(true);\n        setTimeout(() => setCopied(false), 2000);\n    };\n\n    return (\n        <div style={{ position: \'relative\', backgroundColor: \'#f5f5f5\', borderRadius: \'4px\', padding: \'16px\', marginTop: \'16px\', overflowX: \'auto\' }}>\n            <pre style={{ margin: 0, whiteSpace: \'pre-wrap\', wordWrap: \'break-word\' }}>\n                <code>{code}</code>\n            </pre>\n            <button \n                onClick={handleCopy} \n                style={{ \n                    position: \'absolute\', \n                    top: \'8px\', \n                    right: \'8px\', \n                    padding: \'4px 8px\', \n                    backgroundColor: copied ? \'#4CAF50\' : \'#4A4A4A\', \n                    color: \'white\', \n                    border: \'none\', \n                    borderRadius: \'4px\', \n                    cursor: \'pointer\' \n                }}\n            >\n                {copied ? \'Copied!\' : \'Copy\'}\n            </button>\n        </div>\n    );\n};\n\nconst DemoElements = () => {\n  const { colors, spacing } = useTheme();\n\n  return (\n    <Box>\n      <h2>UI Elements</h2>\n      <p>A collection of common UI elements to demonstrate theme consistency.</p>\n      <Stack gap=\"lg\" style={{ marginTop: spacing.lg }}>\n        {/* Text Elements */}\n        <Box>\n          <h3>Text Elements</h3>\n          <Stack gap=\"md\">\n            <h1>Heading 1</h1>\n            <h2>Heading 2</h2>\n            <h3>Heading 3</h3>\n            <p>This is a paragraph of text. It demonstrates the default text color and font size.</p>\n            <blockquote>\n              This is a blockquote. It can be used to highlight a section of text.\n            </blockquote>\n            <pre>\n              <code>\n                {\n                  `// This is a code block.\nfunction greet(name) {\n  return \`Hello, \${name}!\`;\n}`\n                }\n              </code>\n            </pre>\n          </Stack>\n        </Box>\n\n        {/* Form Elements */}\n        <Box>\n          <h3>Form Elements</h3>\n          <form>\n            <Stack gap=\"md\">\n              <label htmlFor=\"name\">Name</label>\n              <input type=\"text\" id=\"name\" name=\"name\" style={{ padding: spacing.sm, borderRadius: \'4px\', border: `1px solid ${colors.accent}` }} />\n\n              <label htmlFor=\"email\">Email</label>\n              <input type=\"email\" id=\"email\" name=\"email\" style={{ padding: spacing.sm, borderRadius: \'4px\', border: `1px solid ${colors.accent}` }} />\n\n              <label htmlFor=\"password\">Password</label>\n              <input type=\"password\" id=\"password\" name=\"password\" style={{ padding: spacing.sm, borderRadius: \'4px\', border: `1px solid ${colors.accent}` }} />\n\n              <label htmlFor=\"select\">Select</label>\n              <select id=\"select\" name=\"select\" style={{ padding: spacing.sm, borderRadius: \'4px\', border: `1px solid ${colors.accent}` }}>\n                <option value=\"1\">Option 1</option>\n                <option value=\"2\">Option 2</option>\n                <option value=\"3\">Option 3</option>\n              </select>\n\n              <Stack direction=\"row\" gap=\"md\">\n                <input type=\"checkbox\" id=\"checkbox\" name=\"checkbox\" />\n                <label htmlFor=\"checkbox\">Checkbox</label>\n              </Stack>\n\n              <Stack direction=\"row\" gap=\"md\">\n                <input type=\"radio\" id=\"radio1\" name=\"radio\" value=\"1\" />\n                <label htmlFor=\"radio1\">Radio 1</label>\n                <input type=\"radio\" id=\"radio2\" name=\"radio\" value=\"2\" />\n                <label htmlFor=\"radio2\">Radio 2</label>\n              </Stack>\n\n              <Box as=\"button\" style={{ alignSelf: \'flex-start\' }}>Submit</Box>\n            </Stack>\n          </form>\n        </Box>\n      </Stack>\n    </Box>\n  );\n};\n\n\nexport const Demo = () => {\n  const [currentTheme, setCurrentTheme] = useState<Partial<Theme>>(themes.default);\n\n  const basicUsage = `\nimport React from \'react\';\nimport ReactDOM from \'react-dom/client\';\nimport { ThemeProvider, Box, Stack } from \'@MichaelCDavids/mute-ui\';\n\nconst App = () => (\n    <ThemeProvider>\n        <Box>\n            <Stack>\n                <h1>My Muted App</h1>\n                <p>Welcome to my new app!</p>\n            </Stack>\n        </Box>\n    </ThemeProvider>\n);\n\nconst root = ReactDOM.createRoot(document.getElementById(\'root\'));\nroot.render(<App />);\n  `;\n\n  const advancedUsage = `\nimport React from \'react\';\nimport ReactDOM from \'react-dom/client\';\nimport { ThemeProvider, Box, Stack } from \'@MichaelCDavids/mute-ui\';\n\nconst customTheme = {\n  colors: {\n    primary: \'#6A0DAD\', // A vibrant purple\n    surface: \'#F3E5F5\',\n    inset: \'#E1BEE7\',\n    text: \'#311B92\',\n  },\n  spacing: {\n    xs: \'8px\',\n    sm: \'16px\',\n    md: \'24px\',\n    lg: \'32px\',\n  }\n};\n\nconst App = () => (\n    <ThemeProvider customTheme={customTheme}>\n        <Box>\n            <Stack>\n                <h1>My Custom Themed App</h1>\n                <p>This app uses a custom theme with vibrant colors!</p>\n            </Stack>\n        </Box>\n    </ThemeProvider>\n);\n\nconst root = ReactDOM.createRoot(document.getElementById(\'root\'));\nroot.render(<App />);\n  `;\n\n  const buttonStyle = {\n    flexGrow: 0,\n    flexShrink: 0,\n  };\n\n  return (\n    <ThemeProvider customTheme={currentTheme}>\n      <div style={{ padding: \'20px\', backgroundColor: \'#eee\', minHeight: \'100vh\' }}>\n        <Stack gap=\"lg\">\n          {/* Header */}\n          <Box>\n            <h1>Welcome to Mute-UI</h1>\n            <p>\n              Mute-UI is a small, opinionated set of React components for building clean and visually \"muted\" user interfaces. \n              It provides a foundational design system to help you create consistent layouts with minimal effort. \n              The core idea is to let the components handle the design, so you can focus on building your application.\n            </p>\n            <p>\n              Try changing the theme to see how the components adapt:\n            </p>\n\n             {/* Theme-switching buttons */}\n            <Stack direction=\"row\" gap=\"md\" style={{ marginTop: \'20px\', flexWrap: \'wrap\' }}>\n                <Box as=\"button\" style={buttonStyle} onClick={() => setCurrentTheme(themes.default)}>Default</Box>\n                <Box as=\"button\" style={buttonStyle} onClick={() => setCurrentTheme(themes.sunset)}>Sunset</Box>\n                <Box as=\"button\" style={buttonStyle} onClick={() => setCurrentTheme(themes.ocean)}>Ocean</Box>\n                <Box as=\"button\" style={buttonStyle} onClick={() => setCurrentTheme(themes.forest)}>Forest</Box>\n                <Box as=\"button\" style={buttonStyle} onClick={() => setCurrentTheme(themes.lavender)}>Lavender</Box>\n                <Box as=\"button\" style={buttonStyle} onClick={() => setCurrentTheme(themes.mint)}>Mint</Box>\n            </Stack>\n          </Box>\n\n          <GradientButtons />\n          <AnimationButtons />\n          <DemoElements />\n\n          {/* Demonstration of nested boxes */}\n          <Box>\n            I am a Level 0 Box (Base Surface)\n            \n            <Box style={{ marginTop: \'20px\' }}>\n              I am a Level 1 Box (Nested)\n              \n              <Box style={{ marginTop: \'20px\' }}>\n                I am a Level 2 Box (Deeply Nested)\n              </Box>\n            </Box>\n          </Box>\n          <Box>\n            <h2>What can you build with Mute-UI?</h2>\n            <p>\n                Mute-UI is perfect for a variety of applications where a clean and consistent design is a priority. Here are a few ideas:\n            </p>\n            <Box style={{ maxHeight: \'150px\', overflowY: \'auto\', paddingRight: \'10px\', border: \'1px solid #ddd\', borderRadius: \'4px\' }}>\n              <ul style={{ marginTop: 0, paddingLeft: \'20px\' }}>\n                  <li><b>Personal dashboards:</b> Create a personalized dashboard to track your habits, goals, or finances.</li>\n                  <li><b>Admin panels:</b> Build intuitive and easy-to-use admin interfaces for your applications.</li>\n                  <li><b>Blogs and portfolios:</b> Showcase your work with a clean and minimalist design.</li>\n                  <li><b>Prototyping:</b> Quickly prototype ideas and layouts without getting bogged down in design details.</li>\n                  <li><b>Internal tools:</b> Develop straightforward internal tools for your team.</li>\n                  <li><b>Documentation sites:</b> Present your documentation in a clear, readable format.</li>\n              </ul>\n            </Box>\n        </Box>\n        <Box>\n            <h2>Getting Started</h2>\n            <p>\n                To use Mute-UI in your own project, install it from npm:\n            </p>\n            <CodeSnippet code=\"npm install @MichaelCDavids/mute-ui\" />\n            \n            <h3>Basic Usage</h3>\n            <p>\n                Wrap your application with the <code>ThemeProvider</code> and start using the components.\n            </p>\n            <CodeSnippet code={basicUsage} />\n\n            <h3>Advanced Usage: Custom Theming</h3>\n            <p>\n                You can easily customize the theme by passing a <code>customTheme</code> object to the <code>ThemeProvider</code>. \n                This allows you to override the default colors, spacing, and other theme properties.\n            </p>\n            <CodeSnippet code={advancedUsage} />\n        </Box>\n           <Box>\n            <h2>Feedback and Suggestions</h2>\n            <p>\n              This package is developed by Michael Davids. You can find the package on npm as @MichaelCDavids/mute-ui. \n              Feel free to reach out with any feedback or suggestions for improvement.\n            </p>\n          </Box>\n        </Stack>\n      </div>\n    </ThemeProvider>\n  );\n};\n
+
+import React, { useState } from 'react';
+import { ThemeProvider, Theme, useTheme } from './context/ThemeContext';
+import { Box } from './atoms/Box';
+import { Stack } from './layout/Stack';
+
+// Define some color presets
+const themes: Record<string, Partial<Theme>> = {
+  default: {},
+  sunset: {
+    colors: {
+      primary: '#A24C2A',
+      surface: '#F2E9E4',
+      inset: '#E0D8D3',
+      text: '#4A4A4A',
+    },
+  },
+  ocean: {
+    colors: {
+      primary: '#0D47A1',
+      surface: '#E3F2FD',
+      inset: '#BBDEFB',
+      text: '#000000',
+    },
+  },
+  forest: {
+    colors: {
+      primary: '#2E7D32',
+      surface: '#E8F5E9',
+      inset: '#C8E6C9',
+      text: '#1B5E20',
+    },
+  },
+  lavender: {
+    colors: {
+      primary: '#673AB7',
+      surface: '#EDE7F6',
+      inset: '#D1C4E9',
+      text: '#311B92',
+    },
+  },
+  mint: {
+    colors: {
+      primary: '#009688',
+      surface: '#E0F2F1',
+      inset: '#B2DFDB',
+      text: '#004D40',
+    },
+  },
+  'ruby-red': {
+    colors: {
+      primary: '#9A1111',
+      surface: '#F9E7E7',
+      inset: '#F2C3C3',
+      text: '#3D0606',
+    },
+  },
+  'goldenrod': {
+    colors: {
+      primary: '#B7860D',
+      surface: '#FCF8E8',
+      inset: '#F7E5B3',
+      text: '#4D3804',
+    },
+  },
+  'charcoal': {
+    colors: {
+      primary: '#36454F',
+      surface: '#D3D3D3',
+      inset: '#A9A9A9',
+      text: '#000000',
+    },
+  },
+  'emerald-green': {
+    colors: {
+      primary: '#009B77',
+      surface: '#E0F2F1',
+      inset: '#B2DFDB',
+      text: '#004D40',
+    },
+  },
+  'amethyst-purple': {
+    colors: {
+      primary: '#9B59B6',
+      surface: '#F4ECF7',
+      inset: '#E8DAEF',
+      text: '#3C1361',
+    },
+  },
+};
+
+const AnimatedButton = ({ gradient, animation, children }) => {
+  const theme = useTheme();
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleClick = () => {
+    setIsAnimating(true);
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 1000); // Animation duration
+
+  };
+
+  const background = gradient.startsWith('radial-gradient')
+    ? gradient
+    : theme.colors.gradients[gradient];
+
+  return (
+    <Box
+      as="button"
+      onClick={handleClick}
+      style={{
+        backgroundImage: background,
+        animation: isAnimating ? `${animation} 1s ease-in-out` : 'none',
+        color: theme.colors.text,
+        flexGrow: 0,
+        flexShrink: 0,
+      }}
+    >
+      {children}
+    </Box>
+  );
+};
+
+const GradientButtons = () => {
+    const theme = useTheme();
+
+    const themedGradients = {
+        primary: `radial-gradient(circle, ${theme.colors.surface}, ${theme.colors.primary})`,
+        secondary: `radial-gradient(circle, ${theme.colors.inset}, ${theme.colors.surface})`,
+        tertiary: `radial-gradient(circle, #FFFFFF, ${theme.colors.inset})`
+    };
+
+    const staticGradients = ['aurora', 'dusk', 'sand', 'sky', 'mist', 'stone', 'meadow'];
+
+  return (
+    <Box>
+      <h2>Gradient Buttons</h2>
+      <p>A selection of 10 themed gradient buttons. The first three are generated from the current theme.</p>
+      <Stack direction="row" gap="md" style={{ marginTop: '20px', flexWrap: 'wrap' }}>
+        {Object.entries(themedGradients).map(([name, gradient]) => (
+            <AnimatedButton key={name} gradient={gradient} animation="pulse">
+                {name.charAt(0).toUpperCase() + name.slice(1)}
+            </AnimatedButton>
+        ))}
+        {staticGradients.map(name => (
+            <AnimatedButton key={name} gradient={name} animation="pulse">
+                {name.charAt(0).toUpperCase() + name.slice(1)}
+            </AnimatedButton>
+        ))}
+      </Stack>
+    </Box>
+  );
+};
+
+
+const AnimationButtons = () => {
+    const animations = [
+        { name: 'pulse', gradient: 'primary' },
+        { name: 'shake', gradient: 'secondary' },
+        { name: 'jiggle', gradient: 'tertiary' },
+        { name: 'bounce', gradient: 'aurora' },
+        { name: 'flash', gradient: 'dusk' },
+        { name: 'headShake', gradient: 'sand' },
+        { name: 'jello', gradient: 'sky' },
+        { name: 'rubberBand', gradient: 'mist' },
+        { name: 'swing', gradient: 'stone' },
+        { name: 'tada', gradient: 'meadow' },
+    ];
+
+    return (
+        <Box>
+            <h2>Animated Buttons</h2>
+            <p>A selection of 10 subtle, industry-standard animations.</p>
+            <Stack direction="row" gap="md" style={{ marginTop: '20px', flexWrap: 'wrap' }}>
+                {animations.map(anim => (
+                    <AnimatedButton key={anim.name} gradient={anim.gradient} animation={anim.name}>
+                        {anim.name.charAt(0).toUpperCase() + anim.name.slice(1)}
+                    </AnimatedButton>
+                ))}
+            </Stack>
+        </Box>
+    );
+};
+
+const CodeSnippet = ({ code }) => {
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(code);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
+    return (
+        <div style={{ position: 'relative', backgroundColor: '#f5f5f5', borderRadius: '4px', padding: '16px', marginTop: '16px', overflowX: 'auto' }}>
+            <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+                <code>{code}</code>
+            </pre>
+            <button
+                onClick={handleCopy}
+                style={{
+                    position: 'absolute',
+                    top: '8px',
+                    right: '8px',
+                    padding: '4px 8px',
+                    backgroundColor: copied ? '#4CAF50' : '#4A4A4A',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                }}
+            >
+                {copied ? 'Copied!' : 'Copy'}
+            </button>
+        </div>
+    );
+};
+
+const DemoElements = () => {
+  const { colors, spacing } = useTheme();
+
+  return (
+    <Box>
+      <h2>Common UI Elements</h2>
+      <p>A collection of common UI elements to demonstrate theme consistency.</p>
+      <Stack gap="lg" style={{ marginTop: spacing.lg }}>
+        {/* Text Elements */}
+        <Box>
+          <h3>Text Elements</h3>
+          <Stack gap="md">
+            <h1>Heading 1</h1>
+            <h2>Heading 2</h2>
+            <h3>Heading 3</h3>
+            <p>This is a paragraph of text. It demonstrates the default text color and font size.</p>
+            <blockquote>
+              This is a blockquote. It can be used to highlight a section of text.
+            </blockquote>
+          </Stack>
+        </Box>
+
+        {/* Form Elements */}
+        <Box>
+          <h3>Form Elements</h3>
+          <form>
+            <Stack gap="md">
+              <label htmlFor="name">Name</label>
+              <input type="text" id="name" name="name" style={{ padding: spacing.sm, borderRadius: '4px', border: `1px solid ${colors.accent}` }} />
+
+              <label htmlFor="select">Select</label>
+              <select id="select" name="select" style={{ padding: spacing.sm, borderRadius: '4px', border: `1px solid ${colors.accent}` }}>
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+              </select>
+
+              <Stack direction="row" gap="md">
+                <input type="checkbox" id="checkbox" name="checkbox" style={{ accentColor: colors.primary }}/>
+                <label htmlFor="checkbox">Checkbox</label>
+              </Stack>
+
+              <Stack direction="row" gap="md">
+                <input type="radio" id="radio1" name="radio" value="1" style={{ accentColor: colors.primary }}/>
+                <label htmlFor="radio1">Radio 1</label>
+                <input type="radio" id="radio2" name="radio" value="2" style={{ accentColor: colors.primary }}/>
+                <label htmlFor="radio2">Radio 2</label>
+              </Stack>
+
+              <Box as="button" style={{ alignSelf: 'flex-start' }}>Submit</Box>
+            </Stack>
+          </form>
+        </Box>
+      </Stack>
+    </Box>
+  );
+};
+
+const UncommonElements = () => {
+    const { colors, spacing } = useTheme();
+    const [sliderValue, setSliderValue] = useState(50);
+
+    const avatarStyle = {
+        width: '50px',
+        height: '50px',
+        borderRadius: '50%',
+        backgroundColor: colors.primary,
+        color: colors.surface,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontWeight: 'bold',
+        fontSize: '20px',
+    };
+
+    const progressContainerStyle = {
+        width: '100%',
+        backgroundColor: colors.inset,
+        borderRadius: '4px',
+        height: spacing.md,
+        overflow: 'hidden',
+    };
+
+    const progressBarFillStyle = {
+        width: `${sliderValue}%`,
+        height: '100%',
+        backgroundColor: colors.primary,
+        transition: 'width 0.3s ease-in-out',
+    };
+
+    return (
+        <Box>
+            <h2>Uncommon UI Elements</h2>
+            <p>A few less common elements to showcase versatility.</p>
+            <Stack gap="lg" style={{ marginTop: spacing.lg }}>
+                <Box>
+                    <h3>Avatar</h3>
+                    <div style={avatarStyle}>MD</div>
+                </Box>
+                <Box>
+                    <h3>Progress Bar</h3>
+                    <div style={progressContainerStyle}>
+                        <div style={progressBarFillStyle}></div>
+                    </div>
+                </Box>
+                <Box>
+                    <h3>Slider</h3>
+                     <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={sliderValue}
+                        onChange={(e) => setSliderValue(Number(e.target.value))}
+                        style={{ width: '100%', accentColor: colors.primary }}
+                    />
+                    <p>Value: {sliderValue}</p>
+                </Box>
+            </Stack>
+        </Box>
+    );
+};
+
+
+export const Demo = () => {
+  const [currentTheme, setCurrentTheme] = useState<Partial<Theme>>(themes.default);
+
+  const basicUsage = `
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { ThemeProvider, Box, Stack } from '@MichaelCDavids/mute-ui';
+
+const App = () => (
+    <ThemeProvider>
+        <Box>
+            <Stack>
+                <h1>My Muted App</h1>
+                <p>Welcome to my new app!</p>
+            </Stack>
+        </Box>
+    </ThemeProvider>
+);
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+  `;
+
+  const advancedUsage = `
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { ThemeProvider, Box, Stack } from '@MichaelCDavids/mute-ui';
+
+const customTheme = {
+  colors: {
+    primary: '#6A0DAD', // A vibrant purple
+    surface: '#F3E5F5',
+    inset: '#E1BEE7',
+    text: '#311B92',
+  },
+  spacing: {
+    xs: '8px',
+    sm: '16px',
+    md: '24px',
+    lg: '32px',
+    xl: '40px',
+   }
+};
+
+const App = () => (
+    <ThemeProvider customTheme={customTheme}>
+        <Box>
+            <h1>My Custom Themed App</h1>
+        </Box>
+    </ThemeProvider>
+);
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+  `;
+
+    const customComponents = `
+import React from 'react';
+import { Box, useTheme } from '@MichaelCDavids/mute-ui';
+
+const CustomButton = ({ children }) => {
+    const { colors, spacing } = useTheme();
+
+    return (
+        <Box
+            as="button"
+            style={{
+                padding: \`\${spacing.sm} \${spacing.md}\`,
+                backgroundColor: colors.primary,
+                color: colors.surface,
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                transition: 'background-color 0.3s ease',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.accent}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
+        >
+            {children}
+        </Box>
+    );
+};
+
+const App = () => (
+    <CustomButton>Click Me</CustomButton>
+);
+  `;
+
+
+  const buttonStyle = {
+    flexGrow: 0,
+    flexShrink: 0,
+  };
+
+  return (
+    <ThemeProvider customTheme={currentTheme}>
+      <div style={{ padding: '20px', backgroundColor: '#eee', minHeight: '100vh' }}>
+        <Stack gap="lg">
+          {/* Header */}
+          <Box>
+            <h1>Welcome to Mute-UI</h1>
+            <p>
+              Mute-UI is a small, opinionated set of React components for building clean and visually "muted" user interfaces.
+            </p>
+            <p>
+              Try changing the theme to see how the components adapt:
+            </p>
+            <Stack direction="row" gap="md" style={{ marginTop: '20px', flexWrap: 'wrap' }}>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.default)}>Default</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.sunset)}>Sunset</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.ocean)}>Ocean</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.forest)}>Forest</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.lavender)}>Lavender</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.mint)}>Mint</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes['ruby-red'])}>Ruby Red</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes['goldenrod'])}>Goldenrod</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes['charcoal'])}>Charcoal</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes['emerald-green'])}>Emerald</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes['amethyst-purple'])}>Amethyst</Box>
+            </Stack>
+          </Box>
+
+          <GradientButtons />
+          <AnimationButtons />
+          <DemoElements />
+          <UncommonElements />
+
+          <Box>
+            <h2>Getting Started</h2>
+            <p>Install Mute-UI from npm:</p>
+            <CodeSnippet code="npm install @MichaelCDavids/mute-ui" />
+
+            <h3>Basic Usage</h3>
+            <p>Wrap your application with the <code>ThemeProvider</code> and import components from <code>@MichaelCDavids/mute-ui</code>.</p>
+            <CodeSnippet code={basicUsage} />
+
+            <h2>Customization</h2>
+
+            <h3>Custom Theming</h3>
+            <p>
+                You can easily override the default theme by passing a <code>customTheme</code> object to the <code>ThemeProvider</code>.
+                This object is deep-merged with the default theme, allowing you to change as much or as little as you want.
+            </p>
+            <CodeSnippet code={advancedUsage} />
+
+            <h3>Styling and Creating Custom Components</h3>
+            <p>
+                Mute-UI is designed to be lightweight and focuses on providing a theming and layout foundation.
+                It gives you the tools to style your own components or standard HTML elements consistently using the <code>useTheme</code> hook.
+            </p>
+            <CodeSnippet code={customComponents} />
+
+        </Box>
+           <Box>
+            <h2>Feedback</h2>
+            <p>
+              This package is developed by Michael Davids. Find it on npm as @MichaelCDavids/mute-ui.
+            </p>
+          </Box>
+        </Stack>
+      </div>
+    </ThemeProvider>
+  );
+};

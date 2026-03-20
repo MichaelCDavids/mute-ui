@@ -6,7 +6,7 @@
 
 ## Live Demo
 
-A live demo of the component library is available at [https://mute-ui.web.app/](https://mute-ui.web.app/).
+A live demo of the component library is available at [https://mute-ui-8de44.web.app/](https://mute-ui-8de44.web.app/).
 
 ## 🌟 Features
 
@@ -242,7 +242,7 @@ export interface Theme {
 
 ## Versioning
 
-This project adheres to [Semantic Versioning](https.semver.org/). Given that the project is in its initial development phase (version 0.x.x), breaking changes may be introduced in minor versions.
+This project adheres to [Semantic Versioning](https://semver.org/). With the release of version 1.0.0, the API is considered stable.
 
 ## Feedback and Contributions
 

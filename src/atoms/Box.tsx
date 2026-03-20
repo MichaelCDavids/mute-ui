@@ -1,6 +1,7 @@
 
 import React, { ElementType, forwardRef, useContext } from 'react';
-import { useTheme, BoxLevelContext } from '../context/ThemeContext';
+import { useTheme } from '../hooks/useTheme';
+import { BoxLevelContext } from '../context/BoxLevelContext';
 
 // 1. Base props for styling
 type StyleProps = {
@@ -46,7 +47,7 @@ const BoxBase = <E extends ElementType = 'div'>(
 
   return (
     <BoxLevelContext.Provider value={newLevel}>
-      <Component ref={ref as any} style={boxStyle} {...props}>
+      <Component ref={ref as React.ForwardedRef<HTMLDivElement>} style={boxStyle} {...props}>
         {children}
       </Component>
     </BoxLevelContext.Provider>
