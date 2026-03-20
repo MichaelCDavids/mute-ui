@@ -2,6 +2,7 @@
 import React, { ElementType, forwardRef, useContext } from 'react';
 import { useTheme } from '../hooks/useTheme';
 import { BoxLevelContext } from '../context/BoxLevelContext';
+import { PolymorphicProps } from '../types';
 
 // 1. Base props for styling
 type StyleProps = {
@@ -9,19 +10,10 @@ type StyleProps = {
   elevation?: 0 | 1 | 2;
 };
 
-// 2. Polymorphic 'as' prop generics
-type PolymorphicAsProp<E extends ElementType> = {
-  as?: E;
-};
-
-type PolymorphicProps<E extends ElementType> = 
-  PolymorphicAsProp<E> & 
-  Omit<React.ComponentPropsWithRef<E>, keyof PolymorphicAsProp<E>>;
-
-// 3. Final BoxProps
+// 2. Final BoxProps
 type BoxProps<E extends ElementType> = PolymorphicProps<E> & StyleProps;
 
-// 4. The base component logic
+// 3. The base component logic
 const BoxBase = <E extends ElementType = 'div'>(
   { as, children, style, padding = 'md', elevation, ...props }: BoxProps<E>,
   ref: React.ForwardedRef<E>
@@ -54,6 +46,6 @@ const BoxBase = <E extends ElementType = 'div'>(
   );
 };
 
-// 5. Wrap with forwardRef and memo for performance
+// 4. Wrap with forwardRef and memo for performance
 const ForwardedRefBox = forwardRef(BoxBase);
 export const Box = React.memo(ForwardedRefBox) as typeof ForwardedRefBox;
