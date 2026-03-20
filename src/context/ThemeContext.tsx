@@ -1,60 +1,149 @@
-// src/context/ThemeContext.tsx
-import React, { createContext, useContext } from 'react';
+
+import React, { createContext, useContext, useMemo } from 'react';
+
+// Define a deep partial utility type
+type DeepPartial<T> = {
+  [P in keyof T]?: DeepPartial<T[P]>;
+};
 
 // 1. Define the shape of our theme
-interface Theme {
+export interface Theme {
   colors: {
+    primary: string;
     surface: string;
+    inset: string;
     text: string;
-    accent: string;
+    gradients: {
+      primary: string;
+      secondary: string;
+      tertiary: string;
+      aurora: string;
+      dusk: string;
+      sand: string;
+      sky: string;
+    };
+     button: {
+      text: string;
+      hover: string;
+    };
   };
-  spacing: Record<string, string>;
+  spacing: {
+    xs: string;
+    sm: string;
+    md: string;
+    lg: string;
+  };
+  shadows: {
+    0: string;
+    1: string;
+    2: string;
+  };
+  animations: {
+    pulse: string;
+  };
 }
 
 // 2. Create the default "Muted" values
 const defaultTheme: Theme = {
   colors: {
-    surface: '#F8F9FA',
+    primary: '#4A4A4A',
+    surface: '#FFFFFF',
+    inset: '#F5F5F5',
     text: '#212529',
-    accent: '#DEE2E6',
+    gradients: {
+      primary: 'radial-gradient(circle, #D4D4D4, #BDBDBD)',
+      secondary: 'radial-gradient(circle, #EAEAEA, #CFCFCF)',
+      tertiary: 'radial-gradient(circle, #F5F5F5, #DEDEDE)',
+      aurora: 'radial-gradient(circle, #b1e1c4, #83c1a3)',
+      dusk: 'radial-gradient(circle, #d1b1e1, #a383c1)',
+      sand: 'radial-gradient(circle, #e1d4b1, #c1a883)',
+      sky: 'radial-gradient(circle, #b1d4e1, #83a8c1)',
+    },
+    button: {
+      text: '#FFFFFF',
+      hover: '#333333',
+    },
   },
   spacing: {
     xs: '4px',
     sm: '8px',
     md: '16px',
     lg: '24px',
+  },
+  shadows: {
+    0: 'none',
+    1: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
+    2: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
+  },
+  animations: {
+    pulse: `
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+        }
+        70% {
+          transform: scale(1.05);
+          box-shadow: 0 0 10px 20px rgba(0, 0, 0, 0);
+        }
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+        }
+      }
+    `,
+  },
+};
+
+// 3. Create the Context objects
+const ThemeContext = createContext<Theme>(defaultTheme);
+export const BoxLevelContext = createContext(0); // For nested Box styles
+
+// 4. Create the Provider component
+interface ThemeProviderProps {
+  children: React.ReactNode;
+  customTheme?: DeepPartial<Theme>;
+}
+
+// Helper for deep merging themes
+const deepMerge = (target: { [key: string]: any }, source: { [key:string]: any }) => {
+  const output = { ...target };
+  if (isObject(target) && isObject(source)) {
+    Object.keys(source).forEach(key => {
+      if (isObject(source[key])) {
+        if (!(key in target))
+          Object.assign(output, { [key]: source[key] });
+        else
+          output[key] = deepMerge(target[key], source[key]);
+      } else {
+        Object.assign(output, { [key]: source[key] });
+      }
+    });
   }
+  return output;
+};
+
+const isObject = (item: any): item is object => {
+  return (item && typeof item === 'object' && !Array.isArray(item));
 };
 
 
-// 3. Create the Context object
-const ThemeContext = createContext<Theme>(defaultTheme);
-
-// 4. Create the Provider component
-// src/context/ThemeContext.tsx
-
-// A "DeepPartial" type helps if the theme has nested objects
-interface ThemeProviderProps {
-  children: React.ReactNode;
-  customTheme?: Partial<Theme>; 
-}
-
-export const ThemeProvider = ({ children, customTheme }: ThemeProviderProps) => {
-  // We merge the defaults with the custom overrides
-  const theme = {
-    ...defaultTheme,
-    ...customTheme,
-    colors: { ...defaultTheme.colors, ...customTheme?.colors },
-    spacing: { ...defaultTheme.spacing, ...customTheme?.spacing },
-  };
+export const ThemeProvider = React.memo(({ children, customTheme }: ThemeProviderProps) => {
+  // Memoize the theme value to prevent unnecessary re-renders
+  const theme = useMemo(() => {
+    if (customTheme) {
+      return deepMerge(defaultTheme, customTheme) as Theme;
+    }
+    return defaultTheme;
+  }, [customTheme]);
 
   return (
     <ThemeContext.Provider value={theme}>
+      <style>{theme.animations.pulse}</style>
       {children}
     </ThemeContext.Provider>
   );
-};
+});
 
 // 5. Create a custom hook for easy access
 export const useTheme = () => useContext(ThemeContext);
-

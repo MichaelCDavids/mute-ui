@@ -1,47 +1,58 @@
-// src/atoms/Box.tsx
-import React, { createContext, useContext } from 'react';
-import { useTheme } from '../context/ThemeContext';
 
-interface BoxProps extends React.HTMLAttributes<HTMLElement> {
-  as?: React.ElementType;
-  children?: React.ReactNode;
+import React, { ElementType, forwardRef, useContext } from 'react';
+import { useTheme, BoxLevelContext } from '../context/ThemeContext';
+
+// 1. Base props for styling
+type StyleProps = {
+  padding?: keyof ReturnType<typeof useTheme>['spacing'];
   elevation?: 0 | 1 | 2;
-}
+};
 
-// 1. Internal context to track nesting depth
-const BoxLevelContext = createContext(0);
+// 2. Polymorphic 'as' prop generics
+type PolymorphicAsProp<E extends ElementType> = {
+  as?: E;
+};
 
-export const Box = ({ 
-  as: Component = 'div', 
-  children, 
-  elevation: manualElevation, 
-  style, 
-  ...props 
-}: BoxProps) => {
-  const { colors, shadows } = useTheme();
-  
-  // 2. Consume the current level from a parent Box (defaults to 0)
+type PolymorphicProps<E extends ElementType> = 
+  PolymorphicAsProp<E> & 
+  Omit<React.ComponentPropsWithRef<E>, keyof PolymorphicAsProp<E>>;
+
+// 3. Final BoxProps
+type BoxProps<E extends ElementType> = PolymorphicProps<E> & StyleProps;
+
+// 4. The base component logic
+const BoxBase = <E extends ElementType = 'div'>(
+  { as, children, style, padding = 'md', elevation, ...props }: BoxProps<E>,
+  ref: React.ForwardedRef<E>
+) => {
+  const { colors, spacing, shadows } = useTheme();
   const level = useContext(BoxLevelContext);
+  const newLevel = level + 1;
 
-  // 3. Logic: Manual elevation wins, otherwise it follows the nesting level
-  const currentElevation = manualElevation ?? (level > 2 ? 2 : level);
+  const currentElevation = elevation ?? (level > 2 ? 2 : (level as 0 | 1 | 2));
 
   const boxStyle: React.CSSProperties = {
     backgroundColor: level > 0 ? colors.accent : colors.surface,
-    boxShadow: shadows[currentElevation as 0 | 1 | 2],
+    boxShadow: shadows[currentElevation],
     borderRadius: '8px',
     border: level === 0 ? `1px solid ${colors.accent}` : 'none',
-    padding: '16px',
+    padding: spacing[padding],
+    color: colors.text,
     transition: 'all 0.2s ease-in-out',
-    ...style
+    ...style,
   };
 
+  const Component = as || 'div';
+
   return (
-    // 4. Provide an incremented level to any children
-    <BoxLevelContext.Provider value={level + 1}>
-      <Component style={boxStyle} {...props}>
+    <BoxLevelContext.Provider value={newLevel}>
+      <Component ref={ref as any} style={boxStyle} {...props}>
         {children}
       </Component>
     </BoxLevelContext.Provider>
   );
 };
+
+// 5. Wrap with forwardRef and memo for performance
+const ForwardedRefBox = forwardRef(BoxBase);
+export const Box = React.memo(ForwardedRefBox) as typeof ForwardedRefBox;
