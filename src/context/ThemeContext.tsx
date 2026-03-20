@@ -24,6 +24,16 @@ export interface Theme {
       mist: string;
       stone: string;
       meadow: string;
+      rose: string;
+      peach: string;
+      ice: string;
+      lagoon: string;
+      heather: string;
+      moss: string;
+      lilac: string;
+      apricot: string;
+      seafoam: string;
+      coral: string;
     };
      button: {
       text: string;
@@ -43,6 +53,8 @@ export interface Theme {
   };
   animations: {
     pulse: string;
+    shake: string;
+    jiggle: string;
   };
 }
 
@@ -64,6 +76,16 @@ const defaultTheme: Theme = {
       mist: 'radial-gradient(circle, #d7e0e4, #b0c0c8)',
       stone: 'radial-gradient(circle, #c8c8c8, #a8a8a8)',
       meadow: 'radial-gradient(circle, #c4e1b1, #a3c183)',
+      rose: 'radial-gradient(circle, #e1b1b1, #c18383)',
+      peach: 'radial-gradient(circle, #e1c4b1, #c1a383)',
+      ice: 'radial-gradient(circle, #b1e1e1, #83c1c1)',
+      lagoon: 'radial-gradient(circle, #b1e1d4, #83c1a8)',
+      heather: 'radial-gradient(circle, #d1b1e1, #a383c1)',
+      moss: 'radial-gradient(circle, #b1e1b1, #83c183)',
+      lilac: 'radial-gradient(circle, #e1b1e1, #c183c1)',
+      apricot: 'radial-gradient(circle, #e1d4b1, #c1a883)',
+      seafoam: 'radial-gradient(circle, #b1e1c4, #83c1a3)',
+      coral: 'radial-gradient(circle, #e1b1b1, #c18383)',
     },
     button: {
       text: '#FFFFFF',
@@ -92,6 +114,29 @@ const defaultTheme: Theme = {
         }
         100% {
           transform: scale(1);
+        }
+      }
+    `,
+    shake: `
+      @keyframes shake {
+        0%, 100% {
+          transform: translateX(0);
+        }
+        10%, 30%, 50%, 70%, 90% {
+          transform: translateX(-5px);
+        }
+        20%, 40%, 60%, 80% {
+          transform: translateX(5px);
+        }
+      }
+    `,
+    jiggle: `
+      @keyframes jiggle {
+        0%, 100% {
+          transform: rotate(-1deg);
+        }
+        50% {
+          transform: rotate(1deg);
         }
       }
     `,
@@ -142,7 +187,11 @@ export const ThemeProvider = React.memo(({ children, customTheme }: ThemeProvide
 
   return (
     <ThemeContext.Provider value={theme}>
-      <style>{theme.animations.pulse}</style>
+      <style>
+        {theme.animations.pulse}
+        {theme.animations.shake}
+        {theme.animations.jiggle}
+      </style>
       {children}
     </ThemeContext.Provider>
   );

@@ -49,16 +49,15 @@ const themes: Record<string, Partial<Theme>> = {
   },
 };
 
-const GradientButton = ({ gradient, children }) => {
+const AnimatedButton = ({ gradient, animation, children }) => {
   const theme = useTheme();
-  const [isPulsing, setIsPulsing] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const handleClick = () => {
-    setIsPulsing(true);
-    // Remove the animation class after it completes
+    setIsAnimating(true);
     setTimeout(() => {
-      setIsPulsing(false);
-    }, 500); // must match animation duration
+      setIsAnimating(false);
+    }, 500); // Animation duration
   };
 
   return (
@@ -67,7 +66,7 @@ const GradientButton = ({ gradient, children }) => {
       onClick={handleClick}
       style={{
         backgroundImage: theme.colors.gradients[gradient],
-        animation: isPulsing ? 'pulse 0.5s ease-in-out' : 'none',
+        animation: isAnimating ? `${animation} 0.5s ease-in-out` : 'none',
         color: theme.colors.button.text,
       }}
     >
@@ -77,28 +76,135 @@ const GradientButton = ({ gradient, children }) => {
 };
 
 const GradientButtons = () => {
+  const gradients = [
+    'aurora', 'dusk', 'sand', 'sky', 'mist', 'stone', 'meadow',
+    'rose', 'peach', 'ice', 'lagoon', 'heather', 'moss', 'lilac',
+    'apricot', 'seafoam', 'coral'
+  ];
+
   return (
     <Box>
-      <h2>Gradient Buttons with Pulse Animation</h2>
+      <h2>Gradient Buttons</h2>
       <p>
-        These buttons showcase the new radial gradients. Click them to see the pulse effect.
+        An expanded palette of 20 muted gradients.
       </p>
       <Stack direction="row" gap="md" style={{ marginTop: '20px', flexWrap: 'wrap' }}>
-        <GradientButton gradient="aurora">Aurora</GradientButton>
-        <GradientButton gradient="dusk">Dusk</GradientButton>
-        <GradientButton gradient="sand">Sand</GradientButton>
-        <GradientButton gradient="sky">Sky</GradientButton>
-        <GradientButton gradient="mist">Mist</GradientButton>
-        <GradientButton gradient="stone">Stone</GradientButton>
-        <GradientButton gradient="meadow">Meadow</GradientButton>
+        {gradients.map(gradient => (
+          <AnimatedButton key={gradient} gradient={gradient} animation="pulse">
+            {gradient.charAt(0).toUpperCase() + gradient.slice(1)}
+          </AnimatedButton>
+        ))}
       </Stack>
     </Box>
   );
 };
 
+const AnimationButtons = () => (
+    <Box>
+        <h2>Animated Buttons</h2>
+        <p>
+            Subtle animations to provide user feedback.
+        </p>
+        <Stack direction="row" gap="md" style={{ marginTop: '20px', flexWrap: 'wrap' }}>
+            <AnimatedButton gradient="primary" animation="pulse">Pulse</AnimatedButton>
+            <AnimatedButton gradient="secondary" animation="shake">Shake</AnimatedButton>
+            <AnimatedButton gradient="tertiary" animation="jiggle">Jiggle</AnimatedButton>
+        </Stack>
+    </Box>
+);
+
+const CodeSnippet = ({ code }) => {
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(code);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
+    return (
+        <div style={{ position: 'relative', backgroundColor: '#f5f5f5', borderRadius: '4px', padding: '16px', marginTop: '16px' }}>
+            <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+                <code>{code}</code>
+            </pre>
+            <button 
+                onClick={handleCopy} 
+                style={{ 
+                    position: 'absolute', 
+                    top: '8px', 
+                    right: '8px', 
+                    padding: '4px 8px', 
+                    backgroundColor: copied ? '#4CAF50' : '#4A4A4A', 
+                    color: 'white', 
+                    border: 'none', 
+                    borderRadius: '4px', 
+                    cursor: 'pointer' 
+                }}
+            >
+                {copied ? 'Copied!' : 'Copy'}
+            </button>
+        </div>
+    );
+};
+
 
 export const Demo = () => {
   const [currentTheme, setCurrentTheme] = useState<Partial<Theme>>(themes.default);
+
+  const basicUsage = `
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { ThemeProvider, Box, Stack } from '@MichaelCDavids/mute-ui';
+
+const App = () => (
+    <ThemeProvider>
+        <Box>
+            <Stack>
+                <h1>My Muted App</h1>
+                <p>Welcome to my new app!</p>
+            </Stack>
+        </Box>
+    </ThemeProvider>
+);
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+  `;
+
+  const advancedUsage = `
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { ThemeProvider, Box, Stack } from '@MichaelCDavids/mute-ui';
+
+const customTheme = {
+  colors: {
+    primary: '#6A0DAD', // A vibrant purple
+    surface: '#F3E5F5',
+    inset: '#E1BEE7',
+    text: '#311B92',
+  },
+  spacing: {
+    xs: '8px',
+    sm: '16px',
+    md: '24px',
+    lg: '32px',
+  }
+};
+
+const App = () => (
+    <ThemeProvider customTheme={customTheme}>
+        <Box>
+            <Stack>
+                <h1>My Custom Themed App</h1>
+                <p>This app uses a custom theme with vibrant colors!</p>
+            </Stack>
+        </Box>
+    </ThemeProvider>
+);
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+  `;
 
   return (
     <ThemeProvider customTheme={currentTheme}>
@@ -128,6 +234,7 @@ export const Demo = () => {
           </Box>
 
           <GradientButtons />
+          <AnimationButtons />
 
           {/* Demonstration of nested boxes */}
           <Box>
@@ -158,31 +265,20 @@ export const Demo = () => {
             <p>
                 To use Mute-UI in your own project, install it from npm:
             </p>
-            <pre><code>
-                npm install @MichaelCDavids/mute-ui
-            </code></pre>
+            <CodeSnippet code="npm install @MichaelCDavids/mute-ui" />
+            
+            <h3>Basic Usage</h3>
             <p>
-                Then, wrap your application with the <code>ThemeProvider</code> and start using the components:
+                Wrap your application with the <code>ThemeProvider</code> and start using the components.
             </p>
-            <pre><code>
-{`import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { ThemeProvider, Box, Stack } from '@MichaelCDavids/mute-ui';
+            <CodeSnippet code={basicUsage} />
 
-const App = () => (
-    <ThemeProvider>
-        <Box>
-            <Stack>
-                <h1>My Muted App</h1>
-                <p>Welcome to my new app!</p>
-            </Stack>
-        </Box>
-    </ThemeProvider>
-);
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);`}
-            </code></pre>
+            <h3>Advanced Usage: Custom Theming</h3>
+            <p>
+                You can easily customize the theme by passing a <code>customTheme</code> object to the <code>ThemeProvider</code>. 
+                This allows you to override the default colors, spacing, and other theme properties.
+            </p>
+            <CodeSnippet code={advancedUsage} />
         </Box>
            <Box>
             <h2>Feedback and Suggestions</h2>
