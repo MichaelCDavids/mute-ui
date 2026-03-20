@@ -35,9 +35,9 @@ npm install @MichaelCDavids/mute-ui
 Wrap your application with the `ThemeProvider` and start building with `Box` and `Stack`.
 
 ```tsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { ThemeProvider, Box, Stack } from '@MichaelCDavids/mute-ui';
+import React from \'react\';
+import ReactDOM from \'react-dom/client\';
+import { ThemeProvider, Box, Stack } from \'@MichaelCDavids/mute-ui\';
 
 const App = () => (
     <ThemeProvider>
@@ -45,7 +45,7 @@ const App = () => (
             <Stack gap="md">
                 <h1>My Muted App</h1>
                 <p>Welcome to my new app!</p>
-                <Box as="button" onClick={() => alert('Clicked!')}>
+                <Box as="button" onClick={() => alert(\'Clicked!\')}>
                     Click me
                 </Box>
             </Stack>
@@ -53,7 +53,7 @@ const App = () => (
     </ThemeProvider>
 );
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById(\'root\'));
 root.render(<App />);
 ```
 
@@ -64,21 +64,21 @@ root.render(<App />);
 You can easily override the default theme by passing a `customTheme` object to the `ThemeProvider`. This object is deep-merged with the default theme.
 
 ```tsx
-import { ThemeProvider, Box, Stack } from '@MichaelCDavids/mute-ui';
+import { ThemeProvider, Box, Stack } from \'@MichaelCDavids/mute-ui\';
 
 const customTheme = {
   colors: {
-    primary: '#6A0DAD', // A vibrant purple
-    surface: '#F3E5F5',
-    inset: '#E1BEE7',
-    text: '#311B92',
+    primary: \'#6A0DAD\', // A vibrant purple
+    surface: \'#F3E5F5\',
+    inset: \'#E1BEE7\',
+    text: \'#311B92\',
   },
   spacing: {
-    xs: '8px',
-    sm: '16px',
-    md: '24px',
-    lg: '32px',
-    xl: '40px',
+    xs: \'8px\',
+    sm: \'16px\',
+    md: \'24px\',
+    lg: \'32px\',
+    xl: \'40px\',
   }
 };
 
@@ -93,19 +93,19 @@ const App = () => (
 
 ### Styling Standard Elements
 
-Mute-UI is designed to be lightweight and focuses on providing a theming and layout foundation. It doesn't provide a component for every HTML element. Instead, it gives you the tools to style your own components or standard HTML elements consistently.
+Mute-UI is designed to be lightweight and focuses on providing a theming and layout foundation. It doesn\'t provide a component for every HTML element. Instead, it gives you the tools to style your own components or standard HTML elements consistently.
 
 You can use the `useTheme` hook to access theme properties like colors and spacing to style your elements.
 
 ```tsx
-import { useTheme, Box, Stack } from '@MichaelCDavids/mute-ui';
+import { useTheme, Box, Stack } from \'@MichaelCDavids/mute-ui\';
 
 const MyForm = () => {
   const { colors, spacing } = useTheme();
 
   const inputStyle = {
     padding: spacing.sm,
-    borderRadius: '4px',
+    borderRadius: \'4px\',
     border: `1px solid ${colors.accent}`,
     backgroundColor: colors.surface,
     color: colors.text
@@ -116,7 +116,7 @@ const MyForm = () => {
       <Stack gap="md">
         <label htmlFor="name">Name</label>
         <input type="text" id="name" style={inputStyle} />
-        <Box as="button" style={{ alignSelf: 'flex-start' }}>Submit</Box>
+        <Box as="button" style={{ alignSelf: \'flex-start\' }}>Submit</Box>
       </Stack>
     </Box>
   );
@@ -125,11 +125,11 @@ const MyForm = () => {
 
 ### Gradients and Animations
 
-Mute-UI comes with a set of predefined gradients and animations. Here's how you might use them to create an animated button.
+Mute-UI comes with a set of predefined gradients and animations. Here\'s how you might use them to create an animated button.
 
 ```tsx
-import { useTheme, Box } from '@MichaelCDavids/mute-ui';
-import { useState } from 'react';
+import { useTheme, Box } from \'@MichaelCDavids/mute-ui\';
+import { useState } from \'react\';
 
 const AnimatedButton = ({ gradient, animation, children }) => {
   const theme = useTheme();
@@ -146,7 +146,7 @@ const AnimatedButton = ({ gradient, animation, children }) => {
       onClick={handleClick}
       style={{ 
         backgroundImage: theme.colors.gradients[gradient],
-        animation: isAnimating ? `${animation} 0.5s ease-in-out` : 'none',
+        animation: isAnimating ? `${animation} 0.5s ease-in-out` : \'none\',
       }}
     >
       {children}
@@ -176,10 +176,9 @@ The provider component that makes the theme available to the rest of your applic
 The fundamental, polymorphic building block.
 
 | Prop | Type | Description |
-|---|---|---|
-| `as` | `React.ElementType` | The HTML element to render. Defaults to `div`. |
+|---|---|---|\n| `as` | `React.ElementType` | The HTML element to render. Defaults to `div`. |
 | `style` | `React.CSSProperties` | Standard React inline styles. |
-| `padding` | `keyof Theme['spacing']` | The padding to apply, based on theme tokens. |
+| `padding` | `keyof Theme[\'spacing\']` | The padding to apply, based on theme tokens. |
 | `elevation` | `0 \| 1 \| 2` | The shadow to apply, based on theme tokens. |
 | `...rest` | | All other props are passed to the underlying element. |
 
@@ -188,10 +187,44 @@ The fundamental, polymorphic building block.
 A component for managing layout and spacing between elements.
 
 | Prop | Type | Description |
-|---|---|---|
-| `direction` | `'row' \| 'column'` | The direction of the stack. Defaults to `'column'`. |
-| `gap` | `keyof Theme['spacing']` | The space between elements, based on theme tokens. |
+|---|---|---|\n| `direction` | `\'row\' \| \'column\'` | The direction of the stack. Defaults to `\'column\'`. |
+| `gap` | `keyof Theme[\'spacing\']` | The space between elements, based on theme tokens. |
 | `style` | `React.CSSProperties` | Standard React inline styles. |
+
+### `Card`
+
+A versatile component for displaying content in a styled container. `Card` is a composite component that includes `Header`, `Body`, and `Footer` sub-components.
+
+| Prop      | Type              | Description                                     |
+|-----------|-------------------|-------------------------------------------------|
+| `as`      | `React.ElementType` | The HTML element to render. Defaults to `div`.  |
+| `...rest` |                   | All other props are passed to the underlying `Box` component. |
+
+**Sub-components:**
+
+*   **`Card.Header`**: A `Box` component for the card's header section.
+*   **`Card.Body`**: A `Box` component for the main content of the card.
+*   **`Card.Footer`**: A `Box` component for the card's footer section.
+
+**Example Usage:**
+
+```tsx
+import { Card, Box } from \'@MichaelCDavids/mute-ui\';
+
+const MyCard = () => (
+  <Card>
+    <Card.Header>
+      <h3>Card Title</h3>
+    </Card.Header>
+    <Card.Body>
+      <p>This is the main content of the card. You can put anything you like in here.</p>
+    </Card.Body>
+    <Card.Footer>
+      <Box as="button">Action</Box>
+    </Card.Footer>
+  </Card>
+);
+```
 
 ## Theming
 
