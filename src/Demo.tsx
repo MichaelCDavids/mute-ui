@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { ThemeProvider } from './context/ThemeContext.tsx';
-import { type Theme } from './context/theme.ts';
-import { useTheme } from './hooks/useTheme.ts';
-import { Box } from './atoms/Box.tsx';
-import { Stack } from './layout/Stack.tsx';
+import { type Theme } from './context/theme';
+import { useTheme } from './hooks/useTheme';
+import { Box } from './atoms/Box';
+import { Stack } from './layout/Stack';
+import { Card } from './components/Card';
 
 // Define some color presets
 const themes: Record<string, Partial<Theme>> = {
@@ -16,6 +17,15 @@ const themes: Record<string, Partial<Theme>> = {
         accent: '#C5CAE9',
     }
   },
+  sunset: {
+    colors: {
+      primary: '#A24C2A',
+      surface: '#F2E9E4',
+      inset: '#E0D8D3',
+      text: '#4A4A4A',
+      accent: '#D3C1BA',
+    },
+  },
   ocean: {
     colors: {
       primary: '#0D47A1',
@@ -23,6 +33,51 @@ const themes: Record<string, Partial<Theme>> = {
       inset: '#BBDEFB',
       text: '#000000',
       accent: '#90CAF9',
+    },
+  },
+  forest: {
+    colors: {
+      primary: '#2E7D32',
+      surface: '#E8F5E9',
+      inset: '#C8E6C9',
+      text: '#1B5E20',
+      accent: '#A5D6A7',
+    },
+  },
+  lavender: {
+    colors: {
+      primary: '#673AB7',
+      surface: '#EDE7F6',
+      inset: '#D1C4E9',
+      text: '#311B92',
+      accent: '#B39DDB',
+    },
+  },
+  mint: {
+    colors: {
+      primary: '#009688',
+      surface: '#E0F2F1',
+      inset: '#B2DFDB',
+      text: '#004D40',
+      accent: '#80CBC4',
+    },
+  },
+  'ruby-red': {
+    colors: {
+      primary: '#9A1111',
+      surface: '#F9E7E7',
+      inset: '#F2C3C3',
+      text: '#3D0606',
+      accent: '#E5A2A2',
+    },
+  },
+  'goldenrod': {
+    colors: {
+      primary: '#B7860D',
+      surface: '#FCF8E8',
+      inset: '#F7E5B3',
+      text: '#4D3804',
+      accent: '#F0D993',
     },
   },
 };
@@ -99,6 +154,17 @@ const DemoElements = () => {
               <Box as="button" style={{ alignSelf: 'flex-start' }}>Submit</Box>
             </Stack>
           </form>
+        </Box>
+
+        <Box>
+            <h3>Card Component</h3>
+            <Card>
+                <Card.Header>Card Header</Card.Header>
+                <Card.Body>
+                    <p>This is the body of the card. It can contain any content you like.</p>
+                </Card.Body>
+                <Card.Footer>Card Footer</Card.Footer>
+            </Card>
         </Box>
       </Stack>
     </Box>
@@ -181,7 +247,13 @@ root.render(<App />);
             </p>
             <Stack direction="row" gap="md" style={{ marginTop: '20px', flexWrap: 'wrap' }}>
                 <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.default)}>Default</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.sunset)}>Sunset</Box>
                 <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.ocean)}>Ocean</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.forest)}>Forest</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.lavender)}>Lavender</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes.mint)}>Mint</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes['ruby-red'])}>Ruby Red</Box>
+                <Box as="button" style={buttonStyle} onClick={() => setCurrentTheme(themes['goldenrod'])}>Goldenrod</Box>
             </Stack>
           </Box>
 
