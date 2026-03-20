@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Theme, defaultTheme } from './theme';
-import { ThemeContext } from './ThemeContext.ts';
+import { ThemeContext } from './ThemeContext';
 
 interface ThemeProviderProps {
   children: React.ReactNode;

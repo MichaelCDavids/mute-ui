@@ -1,6 +1,8 @@
 
 import React, { useState } from 'react';
-import { ThemeProvider, Theme, useTheme } from './context/ThemeContext';
+import { ThemeProvider } from './context/ThemeContext.tsx';
+import { type Theme } from './context/theme';
+import { useTheme } from './hooks/useTheme';
 import { Box } from './atoms/Box';
 import { Stack } from './layout/Stack';
 
