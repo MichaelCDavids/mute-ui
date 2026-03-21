@@ -144,7 +144,7 @@ const AnimatedButton = ({ gradient, animation, children }) => {
     <Box
       as="button"
       onClick={handleClick}
-      style={{ 
+      style={{
         backgroundImage: theme.colors.gradients[gradient],
         animation: isAnimating ? `${animation} 0.5s ease-in-out` : \'none\',
       }}
@@ -176,7 +176,8 @@ The provider component that makes the theme available to the rest of your applic
 The fundamental, polymorphic building block.
 
 | Prop | Type | Description |
-|---|---|---|\n| `as` | `React.ElementType` | The HTML element to render. Defaults to `div`. |
+|---|---|---|
+| `as` | `React.ElementType` | The HTML element to render. Defaults to `div`. |
 | `style` | `React.CSSProperties` | Standard React inline styles. |
 | `padding` | `keyof Theme[\'spacing\']` | The padding to apply, based on theme tokens. |
 | `elevation` | `0 \| 1 \| 2` | The shadow to apply, based on theme tokens. |
@@ -187,7 +188,8 @@ The fundamental, polymorphic building block.
 A component for managing layout and spacing between elements.
 
 | Prop | Type | Description |
-|---|---|---|\n| `direction` | `\'row\' \| \'column\'` | The direction of the stack. Defaults to `\'column\'`. |
+|---|---|---|
+| `direction` | `\'row\' \| \'column\'` | The direction of the stack. Defaults to `\'column\'`. |
 | `gap` | `keyof Theme[\'spacing\']` | The space between elements, based on theme tokens. |
 | `style` | `React.CSSProperties` | Standard React inline styles. |
 
@@ -202,9 +204,9 @@ A versatile component for displaying content in a styled container. `Card` is a 
 
 **Sub-components:**
 
-*   **`Card.Header`**: A `Box` component for the card's header section.
+*   **`Card.Header`**: A `Box` component for the card\'s header section.
 *   **`Card.Body`**: A `Box` component for the main content of the card.
-*   **`Card.Footer`**: A `Box` component for the card's footer section.
+*   **`Card.Footer`**: A `Box` component for the card\'s footer section.
 
 **Example Usage:**
 
@@ -221,6 +223,29 @@ const MyCard = () => (
     </Card.Body>
     <Card.Footer>
       <Box as="button">Action</Box>
+    </Card.Footer>
+  </Card>
+);
+```
+
+**Polymorphism with `as` prop**
+
+The `Card` component and its sub-components are polymorphic. This means you can specify the underlying HTML element that gets rendered by using the `as` prop. This is useful for semantic HTML and accessibility.
+
+Here is an example of a `Card` that uses more semantic HTML elements:
+```tsx
+import { Card } from \'@MichaelCDavids/mute-ui\';
+
+const ArticleCard = () => (
+  <Card as="article">
+    <Card.Header as="header">
+        <Card as="h1">Article Title</Card>
+    </Card.Header>
+    <Card.Body as="main">
+        <Card as="p">This is the main content of the article.</Card>
+    </Card.Body>
+    <Card.Footer as="footer">
+        <Card as="p">Published on January 1, 2024</Card>
     </Card.Footer>
   </Card>
 );
@@ -252,7 +277,7 @@ export interface Theme {
       rose: string;
       peach: string;
       ice: string;
-      lavender: string;
+a      lavender: string;
       mint: string;
       butter: string;
       coral: string;
@@ -276,8 +301,14 @@ export interface Theme {
 
 ## Versioning
 
-This project adheres to [Semantic Versioning](https://semver.org/). With the release of version 1.0.0, the API is considered stable.
+This project adheres to [Semantic Versioning](https://semver.org/). 
 
 ## Feedback and Contributions
 
 This package is developed by Michael Davids. You can find the package on npm as `@MichaelCDavids/mute-ui`. Feel free to reach out with any feedback or suggestions for improvement.
+
+## Support
+
+If you like this project and want to support its development, you can buy me a coffee! It is greatly appreciated, but not expected.
+
+<a href="https://www.buymeacoffee.com/michaelcdavids" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
