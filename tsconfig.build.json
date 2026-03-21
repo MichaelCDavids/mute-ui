@@ -1,6 +1,7 @@
+
 {
   "extends": "./tsconfig.json",
-  "include": ["src/index.ts", "src/context/ThemeContext.ts", "src/context/theme.ts", "src/atoms/Box.tsx", "src/layout/Stack.tsx", "src/hooks/useTheme.ts", "src/context/BoxLevelContext.ts", "src/components/Card.tsx"],
+  "include": ["src"],
   "exclude": [
     "src/__tests__",
     "src/test",
